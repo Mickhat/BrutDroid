@@ -149,11 +149,8 @@ def setup_cert_with_magisk():
     print("  - Ensure Burp Suite is running on port 8080.")
     print("  - Set emulator proxy: Settings → Network → Proxy")
     print("    → Host: 127.0.0.1, Port: 8080")
-    print("\033[96m  Waiting 20s for proxy setup...\033[0m")
-    for i in range(20, 0, -1):
-        print(f"\r\033[96m  {i}s left...\033[0m", end="", flush=True)
-        time.sleep(1)
-    print("\r\033[96m  Downloading certificate...\033[0m")
+    input("\033[96m  Configure the proxy, then press Enter to continue...\033[0m")
+    print("\033[96m  Downloading certificate...\033[0m")
     try:
         response = requests.get("http://127.0.0.1:8080/cert")
         with open("cacert.der", "wb") as f:
@@ -191,11 +188,8 @@ def setup_cert_with_magisk():
         print("  2. Select 'Install from SD card'")
         print("  3. Choose '/sdcard/portswigger.crt'")
         print("  4. Name it 'portswigger'")
-        print("\033[96m  Waiting 60s for installation...\033[0m")
-        for i in range(60, 0, -1):
-            print(f"\r\033[96m  {i}s left...\033[0m", end="", flush=True)
-            time.sleep(1)
-        print("\r\033[96m  Rebooting emulator...\033[0m")
+        input("\033[96m  Install the certificate, then press Enter to reboot...\033[0m")
+        print("\033[96m  Rebooting emulator...\033[0m")
         os.system(f"{ADB} reboot")
         print("\033[92m✔ Setup complete. Emulator rebooting.\033[0m")
     except Exception as e:
@@ -279,14 +273,11 @@ def install_magisk_and_patch_rootavd():
         os.chdir(cwd)
 
         print("\033[96m  Shutting down emulator...\033[0m")
-        time.sleep(5)
+        input("\033[96m  Wait for the emulator to shut down, then press Enter to continue...\033[0m")
 
         print("\n\033[1;93m→ Action Required:\033[0m")
         print("\033[1;36m  1. Cold boot the emulator manually in Android Studio\033[0m")
-        print("\033[96m  Waiting 60s for boot...\033[0m")
-        for i in range(60, 0, -1):
-            print(f"\r\033[96m  {i}s left...\033[0m", end="", flush=True)
-            time.sleep(1)
+        input("\033[96m  Press Enter once the emulator has fully booted...\033[0m")
 
         print("\r\033[96m  Verifying connection...\033[0m")
         os.system("adb devices")
@@ -299,8 +290,7 @@ def install_magisk_and_patch_rootavd():
         print("\033[1;36m  1. Open the Magisk app on the emulator\033[0m")
         print("\033[1;36m  2. Click 'OK' on the popup to complete setup\033[0m")
         print("\033[1;36m  3. The emulator will reboot automatically\033[0m")
-        print("\033[96m  Waiting 10s for you to complete this step...\033[0m")
-        time.sleep(10)
+        input("\033[96m  Complete the steps in Magisk, then press Enter to continue...\033[0m")
         print("\033[92m✔ Root setup complete.\033[0m")
     except Exception as e:
         print(f"\033[91m✖ Failed: {e}\033[0m")
@@ -341,7 +331,7 @@ def frida_tool_options():
             print("\033[96m  Requesting root...\033[0m")
             os.system("adb shell su -c 'echo Root granted'")
             print("\033[92m✔ Root requested. Grant popup if prompted.\033[0m")
-            time.sleep(3)
+            input("\033[96m  Grant root on the emulator, then press Enter to continue...\033[0m")
             package = input("\033[96m→ Enter package name: \033[0m")
             scripts = {"2": "SSL-BYE.js", "3": "ROOTER.js", "4": "PintooR.js"}
             script_path = f"./Fripts/{scripts[choice]}"
